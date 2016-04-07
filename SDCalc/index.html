@@ -15,11 +15,6 @@
 		
 		
 		<input type="file" on-read-file="showContent($fileContent)" />
-		<div ng-if="content">
-			<h2>File content is:</h2>
-			<pre>{{ content }}</pre>	
-		</div>
-	
 	
 		<table>
 			<tbody  ng-repeat="file in dataFileArray">
