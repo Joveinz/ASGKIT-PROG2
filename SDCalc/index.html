@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+ 
+  <script src="script.js"></script>
+</head>
+
+<body>
+
+	<div id="angular" ng-app='standardDeviationCalculator' ng-controller='standardDeviationCalculatorCtrl'>
+	    <h1>Text File Reader</h1>
+		
+		
+		<input type="file" on-read-file="showContent($fileContent)" />
+		<div ng-if="content">
+			<h2>File content is:</h2>
+			<pre>{{ content }}</pre>	
+		</div>
+	
+	
+		<table>
+			<tbody  ng-repeat="file in dataFileArray">
+				<th>File {{dataFileArray.indexOf(file) + 1}}</th>
+				<tr ng-repeat="number in file  | orderBy:order:reverse">
+					<td>{{number}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		</br></br>
+			<button ng-click="sort()">SORT</button></br>
+		
+		</br>
+		<button ng-click="calculate()">CALCULATE</button></br></br>
+		<table id="resultsTable">
+			<tr>
+				<th>Test</th>
+				<th colspan="2">Test Results</th>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Mean</td>
+				<td>Std.Dev</td>
+			</tr>
+			<tr>
+				<td>Data</td>
+				<td id="mean"></td>
+				<td id="sd"></td>
+			</tr>
+			
+		</table>
+		
+		<p id="message"></p></br>
+	</div>
+</body>
+
+</html>
+
+
+                

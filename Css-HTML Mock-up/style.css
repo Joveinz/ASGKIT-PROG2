@@ -1,0 +1,46 @@
+* {
+	font-family: arial;
+}
+
+
+body{
+	background-color: #EEE;
+	max-width: 1800px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+
+
+.title, .note{
+	
+	text-align: center;
+	margin-top: 50px;
+	margin-bottom: 20px;
+}
+
+.uploadButton{
+	display: inline-block;
+	width: 20%;
+	height: 10%;
+	margin: 0 auto;
+}
+
+button{
+	border: 1px solid black;
+	outline: none;
+	border-radius: 20px;
+}
+
+.fileButtons{
+	display: flex;
+	width: 100%;
+	margin-top: 50px;
+	justify-content: space-around;
+}
+
+.fileButtons button{
+	width: 15%;
+	height: 10%;
+	background-color:  #CDFD47;
+}
