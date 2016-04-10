@@ -44,20 +44,21 @@
 			</tr>
 			<tr>
 				<td>Data</td>
-				<td id="mean"></td>
-				<td id="sd"></td>
+				<td>{{meanResult}}</td>
+				<td>{{standardDeviationResult}}</td>
 			</tr>
 			
 		</table>
 		</br></br>
 		<button ng-click="calculateRegression()">Calculate regression</button></br></br>
 		</br>
-		<h2>meanX = {{meanX}}</h2>
-		<h2>meanY = {{meanY}}</h2>
-		<h2>meanXY = {{meanXY}}</h2>
-		<h2>b1 = {{b1}}</h2>
-		<h2>b0 = {{b0}}</h2>
-		<p id="message"></p></br>
+		<h2>b1 = {{b1Results}}</h2>
+		<h2>b0 = {{b0Results}}</h2>
+		</br>
+		<button ng-click="calculateCorrelation()">Calculate Correlation</button></br></br>
+		</br>
+		<h2>r = {{rResults}}</h2>
+		<h2>r2 = {{r2Results}}</h2>
 	</div>
 </body>
 

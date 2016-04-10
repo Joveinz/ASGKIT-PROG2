@@ -3,30 +3,24 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		//Variables for data
 		
 		$scope.dataFileArray = [];
-		$scope.fileChoice = 0;
 		
 		
-		//Variables for calculating mean and average
+		//Variables for mean and average
 		
-		$scope.mean = 0;
-		$scope.standardDeviation = 0;
-		$scope.meanSubtract = [];
-		$scope.meanSq = [];
-		
-		
-		// Variables for calculating the regression parameters b1 and b2
-		
-		$scope.b1 = 0;
-		$scope.b0 = 0;
-		
-		// testing variables
-		
-		$scope.meanX = 0;
-		$scope.meanY = 0;
-		$scope.meanXY = 0;
+		$scope.meanResult;
+		$scope.standardDeviationResult;
+
+
+		// Variables for regression parameters b1 and b2
 		
 		
+		$scope.b1Results = 0;
+		$scope.b0Results = 0;
 		
+		// vars for corelation coefficient
+		
+		$scope.rResults = 0;
+		$scope.r2Results = 0;
 		
 		//Upload File Function
 		
@@ -43,59 +37,126 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		
 		// Calculate Standard Deviation
 		$scope.calculateSd = function(){
-			$scope.mean = $scope.getMean($scope.dataFileArray[0]);
-			$scope.getStandardDeviation();
-			document.getElementById("message").innerHTML = "done!";
-			document.getElementById("mean").innerHTML = $scope.mean.toFixed(2);
-			document.getElementById("sd").innerHTML = $scope.standardDeviation.toFixed(2);
-		};
+			
+			//decleration of variables
+			
+			var mean = 0;
+			var standardDeviation = 0;
 		
-
-		
-		
-		$scope.getStandardDeviation = function(){
-			var newTableMean = 0;
-			$scope.getMeanSubtract($scope.dataFileArray[0]);
-			$scope.meanSq = $scope.squareArray($scope.meanSubtract);
-			newTableMean = ($scope.getMeanSqSum() / ($scope.meanSq.length - 1)); //this calculates the variance
-			$scope.standardDeviation = Math.sqrt(newTableMean); //this calculates the final standard deviation
-		};
-
-		
-		$scope.getMeanSubtract = function(array) {
-			for(i = 0; i < array.length; i++){
-				$scope.meanSubtract.push(array[i] - $scope.mean);
-			}
-		};
-		
-		
-		
-		$scope.getMeanSqSum = function(){
-			var sum = 0;
-			for(i = 0; i < $scope.meanSq.length; i++){
-				sum += $scope.meanSq[i];
-			}
-			return sum;
+			mean = getMean($scope.dataFileArray[0]);
+			getStandardDeviation();
+			$scope.meanResult = mean.toFixed(2);
+			$scope.standardDeviationResult = standardDeviation.toFixed(2);
+			
+			function getStandardDeviation(){
+				//decleration of variables in this scope
+				var newTableMean = 0;
+				var meanSubtract = [];
+				
+				getMeanSubtract($scope.dataFileArray[0]);
+				var meanSq = squareArray(meanSubtract);
+				
+				
+				newTableMean = (getSum(meanSq) / (meanSq.length - 1)); //this calculates the variance
+				standardDeviation = Math.sqrt(newTableMean); //this calculates the final standard deviation
+				
+				
+				//this function subtract the mean from each element in the integer array 
+				function getMeanSubtract(array) {
+					for(i = 0; i < array.length; i++){
+						meanSubtract.push(array[i] - mean);
+					}
+				};
+			};
 		};
 		
 		// This function calculates regression parameters
 		$scope.calculateRegression = function(){
 			if($scope.dataFileArray.length > 1){
 				
+				
+				var x = $scope.dataFileArray[0];
+				var y = $scope.dataFileArray[1]; // Simply for testing purposes -- will get user input when finished
+				
+				var meanX = getMean(x); 
+				var meanY = getMean(y);
+				var meanXY = getMean(multiplyArrays(x, y));
+				
+				getRegression();
+				
+				// This equation calculates b1
+				function getRegression(){
+					var b1 = 0;
+					var b0 = 0;
+				
+					// let's calculate each bracket
+				
+					var bracket1 = meanX * meanY;
+					var calcTop = bracket1 - meanXY;
+					
+					var bracket2 = Math.pow(meanX,2);
+					var bracket3 = getMean(squareArray(x))
+					var calcBottom = bracket2 - bracket3;
+					
+					b1 = calcTop/calcBottom;
+					b0 = meanY - (b1 * meanX);
+					
+					$scope.b1Results = b1.toFixed(4);
+					$scope.b0Results = b0.toFixed(4); // rounds to 4 decimal places for accuracy
+				};
+				
+				
+			} else {
+				alert("Please upload at least two files");
+			}
+		};
+		
+		// This function calculates the Correlation Coefficient
+		$scope.calculateCorrelation = function(){
+			if($scope.dataFileArray.length > 1){
 				var x = $scope.dataFileArray[0];
 				var y = $scope.dataFileArray[1];
 				
-				$scope.meanX = $scope.getMean(x);
-				$scope.meanY = $scope.getMean(y);
-				$scope.meanXY = $scope.getMean($scope.multiplyArrays(x, y));
+				var n = x.length; // must write code to check if the two arrays are exactly the same length - again, this is temporary
+				var xy = multiplyArrays(x,y);
 				
-				// This equation calculates b1
-				$scope.b1 = (($scope.meanX * $scope.meanY) - $scope.meanXY)/(Math.pow($scope.meanX,2) - $scope.getMean($scope.squareArray(x)));
+				var sumX = getSum(x);
+				var sumY = getSum(y);
+				var sumXY = getSum(xy);
 				
-				$scope.b0 = $scope.meanY - ($scope.b1 * $scope.meanX);
+				var xSquared = squareArray(x);
+				var ySquared = squareArray(y);
 				
-				//$scope.calculateB1();
-				//$scope.calculateB0();	
+				var xSquaredSum = getSum(xSquared);
+				var ySquaredSum = getSum(ySquared);
+				
+				var sumXSquared = Math.pow(sumX, 2);
+				var sumYSquared = Math.pow(sumY, 2);
+				
+				getCoefficient();
+				
+				function getCoefficient(){
+					
+					var r = 0;
+					var r2 = 0;
+					
+					// let's calculate each bracket
+					var bracket1 = n*sumXY;
+					var bracket2 = sumX*sumY;
+					var calcTop = bracket1 - bracket2; // calcTop is the top line of the equation
+					
+					var bracket3 = (n*xSquaredSum)-sumXSquared;
+					var bracket4 = (n*ySquaredSum)-sumYSquared;
+					var calcBottom = Math.sqrt(bracket3*bracket4);
+					
+					r = calcTop/calcBottom;
+					r2 = Math.pow(r, 2);
+					
+					$scope.rResults = r.toFixed(4);
+					$scope.r2Results = r2.toFixed(4);
+				};
+				
+				
 				
 			} else {
 				alert("Please upload at least two files");
@@ -103,17 +164,10 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		};
 		
 		
-		$scope.calculateB1 = function(){
-			//return $scope.meanX * $scope.meanY
-		};
-		
-		
-		$scope.calculateB0 = function(){};
-		
 		// Most used functions
 		
 		// This function takes two given arrays and multiplies each value together
-		$scope.multiplyArrays = function(array1, array2){
+		function multiplyArrays(array1, array2){
 			var multipliedArray = [];
 			for (var i = 0; i < array1.length; i++){
 				multipliedArray[i] = (array1[i] * array2[i]);
@@ -122,16 +176,24 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		};
 		
 		// this function returns the mean of an integer array
-		$scope.getMean = function(array){
+		function getMean(array){
+			sum = getSum(array);
+			
+			return (sum / array.length);
+		};
+		
+		//this function returns the sum of an integer array
+		function getSum(array){
 			var sum = 0;
 			for(i = 0; i < array.length; i++){
 				sum += array[i];
 			}
-			return (sum / array.length);
+			return sum;
 		};
 		
+	
 		// This functions squares all elements in an integer array
-		$scope.squareArray = function(array){
+		function squareArray(array){
 			var squaredArray = [];
 			
 			for(i = 0; i < array.length; i++){
