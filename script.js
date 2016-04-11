@@ -22,6 +22,10 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		$scope.rResults = 0;
 		$scope.r2Results = 0;
 		
+		// vars for Yk
+		
+		$scope.YkResults = 0;
+		
 		//Upload File Function
 		
 		$scope.showContent = function($fileContent){
@@ -161,6 +165,14 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 			} else {
 				alert("Please upload at least two files");
 			}
+		};
+		
+		$scope.calculateYk = function(){
+			$scope.calculateRegression();
+			var getXk = prompt("Please enter a numerical value for Xk", "here");
+			var xk = parseInt(getXk);
+			var yk = $scope.b0Results + ($scope.b1Results * xk);
+			$scope.YkResults = parseFloat(yk).toFixed(4);
 		};
 		
 		
