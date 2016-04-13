@@ -13,6 +13,8 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 
 		// Variables for regression parameters b1 and b2
 		
+		$scope.b1;
+		$scope.b0;
 		
 		$scope.b1Results = 0;
 		$scope.b0Results = 0;
@@ -54,21 +56,21 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 			
 			function getStandardDeviation(){
 				//decleration of variables in this scope
-				var newTableMean = 0;
-				var meanSubtract = [];
+				var variance = 0;
+				var tempArray = [];
 				
 				getMeanSubtract($scope.dataFileArray[0]);
-				var meanSq = squareArray(meanSubtract);
+				tempArray = squareArray(tempArray);
 				
 				
-				newTableMean = (getSum(meanSq) / (meanSq.length - 1)); //this calculates the variance
-				standardDeviation = Math.sqrt(newTableMean); //this calculates the final standard deviation
+				variance = (getSum(tempArray) / (tempArray.length - 1)); //this calculates the variance
+				standardDeviation = Math.sqrt(variance); //this calculates the final standard deviation
 				
 				
-				//this function subtract the mean from each element in the integer array 
+				//this function subtracts the mean from each element in the integer array 
 				function getMeanSubtract(array) {
 					for(i = 0; i < array.length; i++){
-						meanSubtract.push(array[i] - mean);
+						tempArray.push(array[i] - mean);
 					}
 				};
 			};
@@ -90,8 +92,6 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 				
 				// This equation calculates b1
 				function getRegression(){
-					var b1 = 0;
-					var b0 = 0;
 				
 					// let's calculate each bracket
 				
@@ -102,11 +102,11 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 					var bracket3 = getMean(squareArray(x))
 					var calcBottom = bracket2 - bracket3;
 					
-					b1 = calcTop/calcBottom;
-					b0 = meanY - (b1 * meanX);
+					$scope.b1 = calcTop/calcBottom;
+					$scope.b0 = meanY - ($scope.b1 * meanX);
 					
-					$scope.b1Results = b1.toFixed(4);
-					$scope.b0Results = b0.toFixed(4); // rounds to 4 decimal places for accuracy
+					$scope.b1Results = $scope.b1.toFixed(4);
+					$scope.b0Results = $scope.b0.toFixed(4); // rounds to 4 decimal places for accuracy
 				};
 				
 				
@@ -131,10 +131,10 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 				var xSquared = squareArray(x);
 				var ySquared = squareArray(y);
 				
-				var xSquaredSum = getSum(xSquared);
+				var xSquaredSum = getSum(xSquared); // this is the sum of the squared x elements
 				var ySquaredSum = getSum(ySquared);
 				
-				var sumXSquared = Math.pow(sumX, 2);
+				var sumXSquared = Math.pow(sumX, 2); // this is the sum of X to the power of 2
 				var sumYSquared = Math.pow(sumY, 2);
 				
 				getCoefficient();
@@ -167,12 +167,17 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 			}
 		};
 		
+		// this function calculates Yk given user input of Xk
 		$scope.calculateYk = function(){
-			$scope.calculateRegression();
-			var getXk = prompt("Please enter a numerical value for Xk", "here");
-			var xk = parseInt(getXk);
-			var yk = $scope.b0Results + ($scope.b1Results * xk);
-			$scope.YkResults = parseFloat(yk).toFixed(4);
+				if($scope.dataFileArray.length > 1){
+				$scope.calculateRegression();
+				var getXk = prompt("Please enter a numerical value for Xk", "here");
+				var xk = parseFloat(getXk);
+				var yk = ($scope.b0 + ($scope.b1 * xk));
+				$scope.YkResults = parseFloat(yk).toFixed(4);
+			} else {
+				alert("Please upload at least two files");
+			}
 		};
 		
 		
@@ -189,8 +194,7 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		
 		// this function returns the mean of an integer array
 		function getMean(array){
-			sum = getSum(array);
-			
+			var sum = getSum(array);
 			return (sum / array.length);
 		};
 		
@@ -203,11 +207,9 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 			return sum;
 		};
 		
-	
 		// This functions squares all elements in an integer array
 		function squareArray(array){
 			var squaredArray = [];
-			
 			for(i = 0; i < array.length; i++){
 				squaredArray.push(Math.pow(array[i],2));
 			}
@@ -239,6 +241,3 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		}
 	};
 });
-  
-  
-
