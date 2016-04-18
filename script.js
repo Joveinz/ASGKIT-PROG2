@@ -3,7 +3,7 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		//Variables for data
 		
 		$scope.dataFileArray = [];
-		
+		$scope.files = 0;
 		
 		//Variables for mean and average
 		
@@ -31,14 +31,19 @@ angular.module("standardDeviationCalculator", []).controller("standardDeviationC
 		//Upload File Function
 		
 		$scope.showContent = function($fileContent){
-			$scope.content = $fileContent;
-			$scope.dataFileArray.push($scope.content.split("\n"));
-			for (var i = 0; i < $scope.dataFileArray.length; i++){
-				for(var b = 0; b < $scope.dataFileArray[i].length; b++){
-					$scope.dataFileArray[i][b] = parseFloat($scope.dataFileArray[i][b]);
+			if ($scope.dataFileArray.length > 1){
+				alert("Please only upload two files!");
+			} else {
+				$scope.content = $fileContent;
+				$scope.dataFileArray.push($scope.content.split("\n"));
+				for (var i = 0; i < $scope.dataFileArray.length; i++){
+					for(var b = 0; b < $scope.dataFileArray[i].length; b++){
+						$scope.dataFileArray[i][b] = parseFloat($scope.dataFileArray[i][b]);
+					}
 				}
+				$scope.files = $scope.dataFileArray.length;
+				console.log($scope.dataFileArray);
 			}
-			console.log($scope.dataFileArray);
 		};
 		
 		// Calculate Standard Deviation

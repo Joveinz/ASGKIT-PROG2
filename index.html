@@ -8,45 +8,65 @@
   <script src="script.js"></script>
 </head>
 
-<body>
+<body id="angular" ng-app='standardDeviationCalculator' ng-controller='standardDeviationCalculatorCtrl'>
 
-	<div id="angular" ng-app='standardDeviationCalculator' ng-controller='standardDeviationCalculatorCtrl'>
-	    <h1>Text File Reader</h1>
-		<h2>For testing purposes we will just be one file to calculate the standard Deviation and we will be using two files to calculate the regression and correlation.
-		This will change once we implement the desired HTML theme, we will be able to use buttons instead.</h2>
-		
-		
-		<input type="file" on-read-file="showContent($fileContent)" />
+	<h1 class="title">Upload your files here!</h1>
 	
-		<table>
-			<tbody  ng-repeat="file in dataFileArray">
-				<th>File {{dataFileArray.indexOf(file) + 1}}</th>
-				<tr ng-repeat="number in file  | orderBy:order:reverse">
-					<td>{{number}}</td>
-				</tr>
-			</tbody>
-		</table>
+	<input type="file" name="file" on-read-file="showContent($fileContent)" id="file" class="uploadButton" />
+	<label for="file" class="fakeButton">Choose a file</label>
+	<h4>Files uploaded: {{files}}<h4>
+	
+	<h2 class="note"> Please select your desired file to do some nice calculations </h2>
+	<h3>Please click on a file to do different things...</h3>
+	<div class="uploadedFiles">
+		<div class="column">
+			<button class="fileButton">File 1</button>
+			<button class="childButton" ng-click="calculateSd()">Calculate Mean and Standard Deviation</button>
+			
+			<table class="contentTable">
+				<tbody>
+					<th>Contents</th>
+					<tr ng-repeat="number in dataFileArray[0]">
+						<td>{{number}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		
-		</br></br>
-			<button ng-click="sort()">SORT</button></br>
+		<div class="column">
+			<button class="fileButton">File 2</button> <!--Replace buttons div ng-repeat with implementation --> 
+			<button class="childButton" ng-click="calculateSd()">Calculate Mean and Standard Deviation</button>
+
+			<table class="contentTable">
+				<tbody>
+					<th>Contents</th>
+					<tr ng-repeat="number in dataFileArray[1]">
+						<td>{{number}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<div class="results">
+		<button class="childButton" ng-click="calculateRegression()">Calculate Regression</button>
+		<button class="childButton" ng-click="calculateCorrelation()">Calculate Correlation</button>
+		<button class="childButton" ng-click="calculateYk()">Calculate Yk</button>
+		<h3>Regression Parameters:</br></br></h3><h4> b0: {{b0Results}}</br>b1: {{b1Results}}</h4>
+		<h3>Correlation Coefficients:</br></br></h3><h4> r: {{r2Results}}</br>r2: {{r2Results}}</h4>
+		<h3>Yk = {{YkResults}}</h4>
 		
-		</br>
-		<button ng-click="calculateSd()">Calculate Mean and Standard Deviation</button></br></br>
-		<table>
-			<tr>
-				<th>Test</th>
-				<th colspan="2">Test Results</th>
-			</tr>
-			<tr>
-				<td></td>
-				<td>Mean</td>
-				<td>Std.Dev</td>
-			</tr>
-			<tr>
-				<td>Data</td>
-				<td>{{meanResult}}</td>
-				<td>{{standardDeviationResult}}</td>
-			</tr>
+	</div>
+	
+	
+	
+
+	<!-- 
+	
+	<div>
+
+
+		
 			
 		</table>
 		</br></br>
@@ -62,6 +82,8 @@
 		<button ng-click="calculateYk()">Calculate Yk</button></br></br>
 		<h2>Yk = {{YkResults}}</h2>
 	</div>
+	
+	-->
 </body>
 
 </html>
